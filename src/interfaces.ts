@@ -36,7 +36,7 @@ export interface Icrvusd {
     };
 }
 
-export type INetworkName = "ethereum";
+export type INetworkName = "bitlayer" | "bitlayer_testnet";
 
 export interface ICoinFromPoolDataApi {
     address: string,

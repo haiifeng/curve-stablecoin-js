@@ -2,9 +2,10 @@ import axios from "axios";
 import { ethers } from "ethers";
 import BigNumber from 'bignumber.js';
 import { IDict } from "./interfaces";
-import { _getPoolsFromApi } from "./external-api";
+import { _getAllPrices, _getPoolsFromApi } from "./external-api";
 import { crvusd } from "./crvusd";
 import memoize from "memoizee";
+import {CURVE_NETWORK} from './constants/config';
 
 export const MAX_ALLOWANCE = ethers.BigNumber.from(2).pow(ethers.BigNumber.from(256)).sub(ethers.BigNumber.from(1));
 export const MAX_ACTIVE_BAND = ethers.BigNumber.from(2).pow(ethers.BigNumber.from(255)).sub(ethers.BigNumber.from(1));
@@ -246,18 +247,28 @@ export const getUsdRate = async (coin: string): Promise<number> => {
     const pricesFromApi = await _getUsdPricesFromApi()
     if (coinAddress.toLowerCase() in pricesFromApi) return pricesFromApi[coinAddress.toLowerCase()];
 
-    const chainName = 'ethereum';
-    const nativeTokenName = 'ethereum';
+    const chainName = CURVE_NETWORK;
+    const nativeTokenName = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
     coinAddress = isEth(coinAddress) ? nativeTokenName : coinAddress.toLowerCase();
 
-
     if ((_usdRatesCache[coinAddress]?.time || 0) + 600000 < Date.now()) {
-        const url = coinAddress === nativeTokenName ?
-            `https://api.coingecko.com/api/v3/simple/price?ids=${coinAddress}&vs_currencies=usd` :
-            `https://api.coingecko.com/api/v3/simple/token_price/${chainName}?contract_addresses=${coinAddress}&vs_currencies=usd`
-        const response = await axios.get(url);
+        // const url = coinAddress === nativeTokenName ?
+        //     `https://api.coingecko.com/api/v3/simple/price?ids=${coinAddress}&vs_currencies=usd` :
+        //     `https://api.coingecko.com/api/v3/simple/token_price/${chainName}?contract_addresses=${coinAddress}&vs_currencies=usd`
+        // const response = await axios.get(url);
+        const allPrices = await _getAllPrices(chainName)
+        const priceDictByMaxTvl: any = allPrices.reduce((acc, priceItem) => {
+          return {
+            ...acc,
+            [priceItem.address.toLowerCase()]: Number(priceItem.price),
+          }
+        }, {})
+        console.log(44441, 'priceDictByMaxTvl:',priceDictByMaxTvl, coinAddress,priceDictByMaxTvl[coinAddress])
         try {
-            _usdRatesCache[coinAddress] = {'rate': response.data[coinAddress]['usd'] ?? 0, 'time': Date.now()};
+            _usdRatesCache[coinAddress] = {
+                'rate': priceDictByMaxTvl[coinAddress] ?? 0,
+                 'time': Date.now()
+            };
         } catch (err) { // TODO pay attention!
             _usdRatesCache[coinAddress] = {'rate': 0, 'time': Date.now()};
         }

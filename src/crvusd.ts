@@ -14,6 +14,7 @@ import PegKeeper from "./constants/abis/PegKeeper.json";
 import { LLAMMAS } from "./constants/llammas";
 import { COINS } from "./constants/coins";
 import { extractDecimals } from "./constants/utils";
+import {CURVE_NETWORK} from './constants/config';
 
 
 class Crvusd implements Icrvusd {
@@ -31,7 +32,7 @@ class Crvusd implements Icrvusd {
         LLAMMAS: IDict<ILlamma>,
         COINS: IDict<string>,
         DECIMALS: IDict<number>,
-        NETWORK_NAME: "ethereum",
+        NETWORK_NAME: 'bitlayer' | 'bitlayer_testnet',
         FACTORY: string,
         PEG_KEEPERS: string[],
         WETH: string,
@@ -55,16 +56,18 @@ class Crvusd implements Icrvusd {
             LLAMMAS,
             COINS: {},
             DECIMALS: {},
-            NETWORK_NAME: "ethereum",
-            FACTORY: "0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC".toLowerCase(),
+            NETWORK_NAME: CURVE_NETWORK,
+            // TODO Add Mainnet
+            FACTORY: "0x35135Ef6606dc738beba59339c3A768363CD50d9".toLowerCase(),
             PEG_KEEPERS: [
-                '0x9201da0d97caaaff53f01b2fb56767c7072de340'.toLowerCase(),
-                '0xfb726f57d251ab5c731e5c64ed4f5f94351ef9f3'.toLowerCase(),
-                '0x3fa20eaa107de08b38a8734063d605d5842fe09c'.toLowerCase(),
-                '0x0a05ff644878b908ef8eb29542aa88c07d9797d3'.toLowerCase(),
-                '0x503E1Bf274e7a6c64152395aE8eB57ec391F91F8'.toLowerCase(),
+                // TODO Add Mainnet
+                '0x0c75b8638fdF9f517Cc467658d30BF3b144Cc3f3'.toLowerCase(),
+                '0x382B7962FFc43b93425c607AD71C9eDDFa3d34b0'.toLowerCase(),
             ],
-            WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
+            // TODO Add Mainnet and change to wBTC address
+            // WETH: "0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f".toLowerCase(), // TODO Mainnet wbtc address
+            WETH: "0x83f62399f2A417db8ad34A4fC54d58240Fc898e9".toLowerCase(), // TODO Testnet wbtc address
+            
         };
     }
 
@@ -199,7 +202,7 @@ class Crvusd implements Icrvusd {
                 this.setContract(controllers[i], controllerABI);
                 const monetary_policy_address = (await this.contracts[controllers[i]].contract.monetary_policy(this.constantOptions)).toLowerCase();
                 this.setContract(monetary_policy_address, MonetaryPolicy2ABI);
-                const _llammaId: string = is_eth ? "eth" : collateral_symbol.toLowerCase();
+                const _llammaId: string = is_eth ? "btc" : collateral_symbol.toLowerCase();
                 let llammaId = _llammaId
                 let j = 2;
                 while (llammaId in this.constants.LLAMMAS) llammaId = _llammaId + j++;
@@ -210,7 +213,7 @@ class Crvusd implements Icrvusd {
                     collateral_address: is_eth ? "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" : collaterals[i],
                     leverage_zap: "0x0000000000000000000000000000000000000000",
                     deleverage_zap: "0x0000000000000000000000000000000000000000",
-                    collateral_symbol: is_eth ? "ETH" : collateral_symbol,
+                    collateral_symbol: is_eth ? "BTC" : collateral_symbol,
                     collateral_decimals,
                     min_bands: 4,
                     max_bands: 50,
