@@ -983,12 +983,12 @@ export class LlammaTemplate {
 
         const _collateral = parseUnits(collateral, this.collateralDecimals);
         const contract = crvusd.contracts[this.controller].contract;
-        const gas = await contract.estimateGas.remove_collateral(_collateral, isEth(this.collateral), crvusd.constantOptions);
+        const gas = await contract.estimateGas.remove_collateral(_collateral, crvusd.constantOptions);
         if (estimateGas) return gas.toNumber();
 
         await crvusd.updateFeeData();
         const gasLimit = gas.mul(130).div(100);
-        return (await contract.remove_collateral(_collateral, isEth(this.collateral), { ...crvusd.options, gasLimit })).hash
+        return (await contract.remove_collateral(_collateral, { ...crvusd.options, gasLimit })).hash
     }
 
     public async removeCollateralEstimateGas(collateral: number | string): Promise<number> {
@@ -1058,16 +1058,21 @@ export class LlammaTemplate {
         const [_, n1] = await this.userBands(address);
         const { stablecoin } = await this.userState(address);
         const n = (BN(stablecoin).gt(0)) ? MAX_ACTIVE_BAND : n1 - 1;  // In liquidation mode it doesn't matter if active band moves
-        const gas = await contract.estimateGas.repay(_debt, address, n, isEth(this.collateral), crvusd.constantOptions);
+        console.log(999997, `_debt: ${_debt}`, `address: ${address}`, `n: ${n}`, `isEth: ${isEth(this.collateral)}`,crvusd.constantOptions)
+        const gas = await contract.estimateGas.repay(_debt, address, n, crvusd.constantOptions);
+        console.log(9999988, `gas: ${gas}`)
         if (estimateGas) return gas.toNumber();
 
         await crvusd.updateFeeData();
         const gasLimit = gas.mul(130).div(100);
-        return (await contract.repay(_debt, address, n, isEth(this.collateral), { ...crvusd.options, gasLimit })).hash
+        console.log(99999, `gas: ${gas}`)
+        return (await contract.repay(_debt, address, n, { ...crvusd.options, gasLimit })).hash
     }
 
     public async repayEstimateGas(debt: number | string, address = ""): Promise<number> {
+        console.log(999994, `debt; ${debt}`)
         if (!(await this.repayIsApproved(debt))) throw Error("Approval is needed for gas estimation");
+        console.log(99999555, `debt; ${debt}`)
         return await this._repay(debt, address, true) as number;
     }
 
@@ -1105,7 +1110,9 @@ export class LlammaTemplate {
     public async fullRepayEstimateGas(address = ""): Promise<number> {
         address = _getAddress(address);
         const fullRepayAmount = await this._fullRepayAmount(address);
+        console.log(999993, `address: ${address}`, `fullRepayAmount: ${fullRepayAmount}`)
         if (!(await this.repayIsApproved(fullRepayAmount))) throw Error("Approval is needed for gas estimation");
+        console.log(999994444)
         return await this._repay(fullRepayAmount, address, true) as number;
     }
 
@@ -1262,12 +1269,12 @@ export class LlammaTemplate {
         const minAmountBN: BigNumber = BN(stablecoin).times(100 - slippage).div(100);
         const _minAmount = fromBN(minAmountBN);
         const contract = crvusd.contracts[this.controller].contract;
-        const gas = (await contract.estimateGas.liquidate(address, _minAmount, isEth(this.collateral), crvusd.constantOptions))
+        const gas = (await contract.estimateGas.liquidate(address, _minAmount, crvusd.constantOptions))
         if (estimateGas) return gas.toNumber();
 
         await crvusd.updateFeeData();
         const gasLimit = gas.mul(130).div(100);
-        return (await contract.liquidate(address, _minAmount, isEth(this.collateral), { ...crvusd.options, gasLimit })).hash
+        return (await contract.liquidate(address, _minAmount, { ...crvusd.options, gasLimit })).hash
     }
 
     public async liquidateEstimateGas(address: string, slippage = 0.1): Promise<number> {

@@ -263,7 +263,6 @@ export const getUsdRate = async (coin: string): Promise<number> => {
             [priceItem.address.toLowerCase()]: Number(priceItem.price),
           }
         }, {})
-        console.log(44441, 'priceDictByMaxTvl:',priceDictByMaxTvl, coinAddress,priceDictByMaxTvl[coinAddress])
         try {
             _usdRatesCache[coinAddress] = {
                 'rate': priceDictByMaxTvl[coinAddress] ?? 0,
