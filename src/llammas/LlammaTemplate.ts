@@ -19,6 +19,7 @@ import {
 } from "../utils";
 import { IDict } from "../interfaces";
 import { _getUserCollateral } from "../external-api.js";
+import {CURVE_CRVUSD} from '../constants/config';
 
 
 export class LlammaTemplate {
@@ -129,7 +130,7 @@ export class LlammaTemplate {
         this.healthCalculator = llammaData.health_calculator_zap;
         this.collateralSymbol = llammaData.collateral_symbol;
         this.collateralDecimals = llammaData.collateral_decimals;
-        this.coins = ["crvUSD", llammaData.collateral_symbol];
+        this.coins = [CURVE_CRVUSD, llammaData.collateral_symbol];
         this.coinAddresses = [crvusd.address, llammaData.collateral_address];
         this.coinDecimals = [18, llammaData.collateral_decimals];
         this.minBands = llammaData.min_bands;

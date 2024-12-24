@@ -7,3 +7,5 @@ export const CURVE_PRICE_API_BASE_URL =
     : 'https://price-api.bitzap.ai'
 
 export const CURVE_NETWORK = process.env.NEXT_PUBLIC_BITZAP_NODE_ENV === 'development' ? 'bitlayer_testnet' : 'bitlayer'
+
+export const CURVE_CRVUSD = 'USDB' 
