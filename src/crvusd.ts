@@ -200,6 +200,7 @@ class Crvusd implements Icrvusd {
                 const [collateral_symbol, collateral_decimals] = res.splice(0, 2) as [string, number];
                 this.setContract(amms[i], llammaABI);
                 this.setContract(controllers[i], controllerABI);
+
                 const monetary_policy_address = (await this.contracts[controllers[i]].contract.monetary_policy(this.constantOptions)).toLowerCase();
                 this.setContract(monetary_policy_address, MonetaryPolicy2ABI);
                 const _llammaId: string = is_eth ? "btc" : collateral_symbol.toLowerCase();
