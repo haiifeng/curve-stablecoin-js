@@ -58,7 +58,7 @@ class Crvusd implements Icrvusd {
             DECIMALS: {},
             NETWORK_NAME: CURVE_NETWORK,
             // TODO Add Mainnet
-            FACTORY: "0x35135Ef6606dc738beba59339c3A768363CD50d9".toLowerCase(),
+            FACTORY: "0x8ee6a6d6d33fd27ff42a65631c130077bdd073dd".toLowerCase(),
             PEG_KEEPERS: [
                 // TODO Add Mainnet
                 '0x0c75b8638fdF9f517Cc467658d30BF3b144Cc3f3'.toLowerCase(),

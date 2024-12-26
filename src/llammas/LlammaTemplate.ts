@@ -223,16 +223,24 @@ export class LlammaTemplate {
         const controllerContract = crvusd.contracts[this.controller].multicallContract;
         const monetaryPolicyContract = crvusd.contracts[this.monetaryPolicy].multicallContract;
 
+        let mpRateFn = monetaryPolicyContract.rate()
+        if("rate(address)" in crvusd.contracts[this.monetaryPolicy].contract){
+            console.log(999993444, 'statsParameters:','rate(address)')
+            mpRateFn = monetaryPolicyContract.rate(this.controller) 
+        }
         const calls = [
             llammaContract.fee(),
             llammaContract.admin_fee(),
             llammaContract.rate(),
-            "rate(address)" in crvusd.contracts[this.monetaryPolicy].contract ? monetaryPolicyContract.rate(this.controller) : monetaryPolicyContract.rate(),
+            llammaContract.fee(),
+            llammaContract.fee(),
+            // mpRateFn,
             controllerContract.liquidation_discount(),
             controllerContract.loan_discount(),
         ]
 
         const [_fee, _admin_fee, _rate, _mp_rate, _liquidation_discount, _loan_discount]: ethers.BigNumber[] = await crvusd.multicallProvider.all(calls) as ethers.BigNumber[];
+        console.log(99999555, 'statsParameters:',_fee, _admin_fee, _rate, _mp_rate, _liquidation_discount, _loan_discount)
         const [fee, admin_fee, liquidation_discount, loan_discount] = [_fee, _admin_fee, _liquidation_discount, _loan_discount]
             .map((x) => ethers.utils.formatUnits(x.mul(100)));
 
@@ -316,8 +324,22 @@ export class LlammaTemplate {
         for (let i = min_band; i <= max_band; i++) {
             calls.push(llammaContract.bands_x(i), llammaContract.bands_y(i));
         }
+        // console.log(88888, 'calls', calls, 'min_band', min_band, 'max_band', max_band)
 
-        const _bands: ethers.BigNumber[] = await crvusd.multicallProvider.all(calls);
+        // calls may be over 400, so we need to split them
+        // when we call all(calls) with more than 400 calls, we get the following error:
+        // err: max initcode size exceeded: code size 268817 limit 49152 (supplied gas 50000000)
+        // const _bands: ethers.BigNumber[] = await crvusd.multicallProvider.all(calls);
+
+        const batchSize = 100;
+        const promises: any[] = [];
+
+        for (let i = 0; i < calls.length; i += batchSize) {
+            promises.push(crvusd.multicallProvider.all(calls.slice(i, i + batchSize)));
+        }
+
+        const _bandsArrays: any = await Promise.all(promises);
+        const _bands: ethers.BigNumber[] = _bandsArrays.flat();
 
         const bands: { [index: number]: { stablecoin: string, collateral: string } } = {};
         for (let i = min_band; i <= max_band; i++) {
