@@ -2,6 +2,7 @@ import { IDict, ILlamma } from '../interfaces'
 import MonetaryPolicyABI from '../constants/abis/MonetaryPolicy.json'
 import MonetaryPolicy2ABI from '../constants/abis/MonetaryPolicy2.json'
 import { lowerCaseLlammasAddresses } from './utils'
+import {CURVE_WBTC_AMM_ADDRESS, CURVE_WBTC_COLLATERAL_ADDRESS, CURVE_WBTC_CONTROLLER_ADDRESS, CURVE_WBTC_DELEVERAGE_ZAP_ADDRESS, CURVE_WBTC_HEALTH_CALCULATOR_ADDRESS, CURVE_WBTC_LEVERAGE_ZAP_ADDRESS, CURVE_WBTC_MONETARY_POLICY_ADDRESS} from './config'
 
 export const LLAMMAS: IDict<ILlamma> = lowerCaseLlammasAddresses({
   // sfrxeth: {
@@ -36,13 +37,13 @@ export const LLAMMAS: IDict<ILlamma> = lowerCaseLlammasAddresses({
   // },
   wbtc: {
     // TODO Add Mainnet
-    amm_address: '0x38f781b40B73244079Cf99FFA4d7bdD6Ffbb0B21',
-    controller_address: '0x75daeFab810f897B32ABa094E44599906Eb4aaa1',
-    monetary_policy_address: '0x19d6FaC900c6BfF0e5c0a056C9d72dd0EEac53ea',
-    collateral_address: '0x83f62399f2A417db8ad34A4fC54d58240Fc898e9',
-    leverage_zap: '0xe410234F8998d0043198b8D8b2Eb67A70c72ED23',
-    deleverage_zap: '',
-    health_calculator_zap: '0xA89AcA8A6d9646D6d34c6406218BDd0442b2652e',
+    amm_address: CURVE_WBTC_AMM_ADDRESS,
+    controller_address: CURVE_WBTC_CONTROLLER_ADDRESS,
+    monetary_policy_address: CURVE_WBTC_MONETARY_POLICY_ADDRESS,
+    collateral_address: CURVE_WBTC_COLLATERAL_ADDRESS,
+    leverage_zap: CURVE_WBTC_LEVERAGE_ZAP_ADDRESS,
+    deleverage_zap: CURVE_WBTC_DELEVERAGE_ZAP_ADDRESS,
+    health_calculator_zap: CURVE_WBTC_HEALTH_CALCULATOR_ADDRESS,
     collateral_symbol: 'WBTC',
     collateral_decimals: 18,
     min_bands: 4,

@@ -425,6 +425,10 @@
       {
         "name": "collateral",
         "type": "uint256"
+      },
+      {
+        "name": "use_eth",
+        "type": "bool"
       }
     ],
     "name": "remove_collateral",
@@ -461,6 +465,10 @@
       {
         "name": "max_active_band",
         "type": "int256"
+      },
+      {
+        "name": "use_eth",
+        "type": "bool"
       }
     ],
     "name": "repay",
@@ -526,6 +534,10 @@
       {
         "name": "min_x",
         "type": "uint256"
+      },
+      {
+        "name": "use_eth",
+        "type": "bool"
       }
     ],
     "name": "liquidate",
