@@ -225,16 +225,14 @@ export class LlammaTemplate {
 
         let mpRateFn = monetaryPolicyContract.rate()
         if("rate(address)" in crvusd.contracts[this.monetaryPolicy].contract){
-            console.log(999993444, 'statsParameters:','rate(address)')
-            mpRateFn = monetaryPolicyContract.rate(this.controller) 
+            mpRateFn = monetaryPolicyContract.rate(this.controller)
         }
         const calls = [
             llammaContract.fee(),
             llammaContract.admin_fee(),
             llammaContract.rate(),
             llammaContract.fee(),
-            llammaContract.fee(),
-            // mpRateFn,
+            mpRateFn,
             controllerContract.liquidation_discount(),
             controllerContract.loan_discount(),
         ]
@@ -324,7 +322,6 @@ export class LlammaTemplate {
         for (let i = min_band; i <= max_band; i++) {
             calls.push(llammaContract.bands_x(i), llammaContract.bands_y(i));
         }
-        // console.log(88888, 'calls', calls, 'min_band', min_band, 'max_band', max_band)
 
         // calls may be over 400, so we need to split them
         // when we call all(calls) with more than 400 calls, we get the following error:
@@ -333,11 +330,9 @@ export class LlammaTemplate {
 
         const batchSize = 100;
         const promises: any[] = [];
-
         for (let i = 0; i < calls.length; i += batchSize) {
             promises.push(crvusd.multicallProvider.all(calls.slice(i, i + batchSize)));
         }
-
         const _bandsArrays: any = await Promise.all(promises);
         const _bands: ethers.BigNumber[] = _bandsArrays.flat();
 
