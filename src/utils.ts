@@ -5,7 +5,7 @@ import { IDict } from "./interfaces";
 import { _getAllPrices, _getPoolsFromApi } from "./external-api";
 import { crvusd } from "./crvusd";
 import memoize from "memoizee";
-import {CURVE_NETWORK} from './constants/config';
+import {CRVUSD_ADDRESS, CURVE_NETWORK} from './constants/config';
 
 export const MAX_ALLOWANCE = ethers.BigNumber.from(2).pow(ethers.BigNumber.from(256)).sub(ethers.BigNumber.from(1));
 export const MAX_ACTIVE_BAND = ethers.BigNumber.from(2).pow(ethers.BigNumber.from(255)).sub(ethers.BigNumber.from(1));
@@ -298,7 +298,13 @@ export const totalSupply = async (): Promise<{ total: string, minted: string, pe
         pegKeepersBN = pegKeepersBN.plus(toBN(_pegKeeperDebt));
     }
 
-    return { total: mintedBN.plus(pegKeepersBN).toString(), minted: mintedBN.toString(), pegKeepersDebt: pegKeepersBN.toString() };
+    const price = await getUsdRate(CRVUSD_ADDRESS) || 1;
+
+    return { 
+        total: mintedBN.plus(pegKeepersBN).times(price).toString(), 
+        minted: mintedBN.toString(), 
+        pegKeepersDebt: pegKeepersBN.toString()
+     };
 }
 
 export const getLsdApy = memoize(async(name: 'wstETH' | 'sfrxETH'): Promise<{
