@@ -8,7 +8,7 @@ export const CURVE_PRICE_API_BASE_URL =
 
 export const CURVE_NETWORK = process.env.NEXT_PUBLIC_BITZAP_NODE_ENV === 'development' ? 'bitlayer_testnet' : 'bitlayer'
 
-export const CURVE_CRVUSD = 'USDB' 
+export const CURVE_CRVUSD = 'yUSD' 
 export const CRVUSD_ADDRESS = process.env.NODE_ENV === 'development'
   ? '0x318f9be6f2d7983b716be744e65c9caa45054a04'
   : '0x318f9be6f2d7983b716be744e65c9caa45054a04'
