@@ -14,7 +14,7 @@ import PegKeeper from "./constants/abis/PegKeeper.json";
 import { LLAMMAS } from "./constants/llammas";
 import { COINS } from "./constants/coins";
 import { extractDecimals } from "./constants/utils";
-import {CURVE_NETWORK} from './constants/config';
+import {CURVE_CONTROlLER_FACTORY_ADDRESS, CURVE_NETWORK, CURVE_PEG_KEEPERS_USDC, CURVE_PEG_KEEPERS_USDT} from './constants/config';
 
 
 class Crvusd implements Icrvusd {
@@ -58,11 +58,11 @@ class Crvusd implements Icrvusd {
             DECIMALS: {},
             NETWORK_NAME: CURVE_NETWORK,
             // TODO Add Mainnet
-            FACTORY: "0x8ee6a6d6d33fd27ff42a65631c130077bdd073dd".toLowerCase(),
+            FACTORY: CURVE_CONTROlLER_FACTORY_ADDRESS.toLowerCase(),
             PEG_KEEPERS: [
                 // TODO Add Mainnet
-                '0x0c75b8638fdF9f517Cc467658d30BF3b144Cc3f3'.toLowerCase(),
-                '0x382B7962FFc43b93425c607AD71C9eDDFa3d34b0'.toLowerCase(),
+                CURVE_PEG_KEEPERS_USDT.toLowerCase(),
+                CURVE_PEG_KEEPERS_USDC.toLowerCase(),
             ],
             // TODO Add Mainnet and change to wBTC address
             // WETH: "0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f".toLowerCase(), // TODO Mainnet wbtc address
