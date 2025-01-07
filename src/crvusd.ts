@@ -14,7 +14,7 @@ import PegKeeper from "./constants/abis/PegKeeper.json";
 import { LLAMMAS } from "./constants/llammas";
 import { COINS } from "./constants/coins";
 import { extractDecimals } from "./constants/utils";
-import {CURVE_CONTROlLER_FACTORY_ADDRESS, CURVE_NETWORK, CURVE_PEG_KEEPERS_USDC, CURVE_PEG_KEEPERS_USDT} from './constants/config';
+import {CURVE_CONTROlLER_FACTORY_ADDRESS, CURVE_NETWORK, CURVE_PEG_KEEPERS_USDC, CURVE_PEG_KEEPERS_USDT, CURVE_WBTC_COLLATERAL_ADDRESS} from './constants/config';
 
 
 class Crvusd implements Icrvusd {
@@ -66,7 +66,7 @@ class Crvusd implements Icrvusd {
             ],
             // TODO Add Mainnet and change to wBTC address
             // WETH: "0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f".toLowerCase(), // TODO Mainnet wbtc address
-            WETH: "0x83f62399f2A417db8ad34A4fC54d58240Fc898e9".toLowerCase(), // TODO Testnet wbtc address
+            WETH: CURVE_WBTC_COLLATERAL_ADDRESS.toLowerCase(), // TODO Testnet wbtc address
             
         };
     }
@@ -81,7 +81,7 @@ class Crvusd implements Icrvusd {
         // @ts-ignore
         this.signer = null;
         this.signerAddress = "";
-        this.chainId = 0;
+        this.chainId = (options.chainId) || 200901;
         // @ts-ignore
         this.multicallProvider = null;
         this.contracts = {};

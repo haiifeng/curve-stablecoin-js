@@ -231,7 +231,6 @@ export class LlammaTemplate {
             llammaContract.fee(),
             llammaContract.admin_fee(),
             llammaContract.rate(),
-            llammaContract.fee(),
             mpRateFn,
             controllerContract.liquidation_discount(),
             controllerContract.loan_discount(),

@@ -1,8 +1,8 @@
-import {CRVUSD_ADDRESS} from './config';
+import {CRVUSD_ADDRESS, CURVE_WBTC_COLLATERAL_ADDRESS} from './config';
 import { lowerCaseValues } from "./utils";
 
 export const COINS = lowerCaseValues({
     'btc': '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    'wbtc': '0x83f62399f2A417db8ad34A4fC54d58240Fc898e9',
+    'wbtc': CURVE_WBTC_COLLATERAL_ADDRESS,
     'crvusd': CRVUSD_ADDRESS,
 });
